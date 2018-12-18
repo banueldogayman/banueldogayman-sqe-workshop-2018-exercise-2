@@ -333,17 +333,20 @@ function replaceConditionB(condition) {
             name = element;
             indexer = -1;
         }
-
-        condition = fillConditionIndex(name, index, indexer, condition);
+        if (index == 0) { var temp;temp = condition[index];  }
+        condition = fillConditionIndex(name, index, indexer, condition, temp);
         string += condition[index];
     }
     return string;
 }
-function fillConditionIndex(name, index, indexer, condition) {
+
+function fillConditionIndex(name, index, indexer, condition, temp) {
+
+
     if (inputVariables.includes(name)) {
         condition[index] = getValueFromDataTable(name, indexer);
     }
-    else if (index == 2) {
+    else if (index == 2 && getTypeFromDataTable(temp) == 'string') {
         condition[index] = '\'' + condition[index] + '\'';
     }
     return condition;
@@ -361,7 +364,13 @@ function getValueFromDataTable(name, indexer) {
     }
 
 }
-
+function getTypeFromDataTable(name) {
+    for (let index = 0; index < inputDataTable.length; index++) {
+        const cell = inputDataTable[index];
+        if (cell.name == name)
+            return cell.type;
+    }
+}
 function clearLinesFromTable() {
     for (let index = 0; index < constTable.length; index++) {
         const element = constTable[index];
